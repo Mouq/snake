@@ -1,4 +1,4 @@
-use NQPHLL;
+use NQPHLL:from<NQP>;
 
 class Snake::Actions is HLL::Actions;
 
@@ -70,17 +70,18 @@ method compound-statement:sym<if>($/) {
     make QAST::Op.new(:op<if>, $<EXPR>.ast, $<suite>.ast);
 }
 
-method suite:sym<runon>($/) { make $<stmt-list>.ast; }
+method suite:sym<runon>($/) { make $<stmtlist>.ast; }
 
 method suite:sym<normal>($/) {
     my $stmts := QAST::Stmts.new();
-    for $<statement> -> $stmt {
+    for @<statement> -> $stmt {
         $stmts.push: $stmt.ast;
     }
 
     make $stmts;
 }
 
+method statementlist($/) { make QAST::Stmts.new( :node($/), |@<statement> ) }
 method statement($/) { make $<stmt>.ast; }
 
 method stmt-list($/) {
