@@ -55,7 +55,7 @@ method term:sym<float>($/)   { make QAST::NVal.new(:value($<dec_number>.ast)) }
 
 method term:sym<nqp::op>($/) {
     my $op := QAST::Op.new(:op(~$<op>));
-    for $<EXPR> -> $e {
+    for @<EXPR> -> $e {
         $op.push: $e.ast;
     }
 
@@ -70,7 +70,7 @@ method compound-statement:sym<if>($/) {
     make QAST::Op.new(:op<if>, $<EXPR>.ast, $<suite>.ast);
 }
 
-method suite:sym<runon>($/) { make $<stmtlist>.ast; }
+method suite:sym<runon>($/) { make $<stmt-list>.ast; }
 
 method suite:sym<normal>($/) {
     my $stmts := QAST::Stmts.new();
@@ -86,7 +86,7 @@ method statement($/) { make $<stmt>.ast; }
 
 method stmt-list($/) {
     my $stmts := QAST::Stmts.new();
-    for $<simple-statement> -> $stmt {
+    for @<simple-statement> -> $stmt {
         $stmts.push($stmt.ast);
     }
 
@@ -96,7 +96,7 @@ method stmt-list($/) {
 # 9: Top-level components
 method file-input($/) {
     my $stmts := QAST::Stmts.new();
-    for $<line> -> $line {
+    for @<line> -> $line {
         $stmts.push($line.ast) if $line.ast;
     }
 
